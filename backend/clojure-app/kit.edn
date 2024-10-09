@@ -1,8 +1,0 @@
-{:full-name "kit/clojure-app"
- :ns-name   "kit.clojure-app"
- :sanitized "kit/clojure_app"
- :name      "clojure-app"
- :modules   {:root         "modules"
-             :repositories [{:url  "https://github.com/kit-clj/modules.git"
-                             :tag  "master"
-                             :name "kit-modules"}]}}
