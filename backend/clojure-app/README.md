@@ -1,44 +1,37 @@
 # clojure-app
 
-FIXME: description
+Start a [REPL](#repls) in your editor or terminal of choice.
 
-## Installation
+Start the server with:
 
-Download from http://example.com/FIXME.
+```clojure
+(go)
+```
 
-## Usage
+The default API is available under http://localhost:3000/api
 
-FIXME: explanation
+System configuration is available under `resources/system.edn`.
 
-    $ java -jar clojure-app-0.1.0-standalone.jar [args]
+To reload changes:
 
-## Options
+```clojure
+(reset)
+```
 
-FIXME: listing of options this app accepts.
+## REPLs
 
-## Examples
+### Cursive
 
-...
+Configure a [REPL following the Cursive documentation](https://cursive-ide.com/userguide/repl.html). Using the default "Run with IntelliJ project classpath" option will let you select an alias from the ["Clojure deps" aliases selection](https://cursive-ide.com/userguide/deps.html#refreshing-deps-dependencies).
 
-### Bugs
+### CIDER
 
-...
+Use the `cider` alias for CIDER nREPL support (run `clj -M:dev:cider`). See the [CIDER docs](https://docs.cider.mx/cider/basics/up_and_running.html) for more help.
 
-### Any Other Sections
-### That You Think
-### Might be Useful
+Note that this alias runs nREPL during development. To run nREPL in production (typically when the system starts), use the kit-nrepl library through the +nrepl profile as described in [the documentation](https://kit-clj.github.io/docs/profiles.html#profiles).
 
-## License
+### Command Line
 
-Copyright © 2024 FIXME
+Run `clj -M:dev:nrepl` or `make repl`.
 
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+Note that, just like with [CIDER](#cider), this alias runs nREPL during development. To run nREPL in production (typically when the system starts), use the kit-nrepl library through the +nrepl profile as described in [the documentation](https://kit-clj.github.io/docs/profiles.html#profiles).
