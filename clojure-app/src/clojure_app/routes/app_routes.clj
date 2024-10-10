@@ -3,5 +3,6 @@
             [clojure-app.controllers.hello-world-controller :refer [greet-world]]))
 
 (comp/defroutes app-routes
-  (comp/context "/helloWorld" []
-    (comp/GET "/" [] (greet-world))))
+  (comp/context "/api" []
+    (comp/context "/helloWorld" []
+      (comp/GET "/" [] (greet-world)))))
