@@ -3,7 +3,8 @@
             [compojure.core :refer :all]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
             [family-tree-api.db :refer [db]]
-            [family-tree-api.db.members :as members]))
+            [family-tree-api.db.members :as members]
+            [family-tree-api.db.relations :as relations]))
 
 (defn drop-tables []
   (members/drop-members-table db))
@@ -27,8 +28,20 @@
                       :image_url nil
                       :ethnicity nil
                       :culture nil
-                      :languages nil}]
-    (members/insert-member db (assoc empty_member :first_name "Boipelo" :middle_names "Molefe" :last_name "Matheatsie"))))
+                      :languages nil}
+        empty_relation {:member_id nil
+                        :relation_id nil
+                        :direct_relation nil
+                        :is_blood_relation nil
+                        :care nil}
+        member_1 (members/insert-member db (assoc empty_member :first_name "Boipelo" :middle_names "Molefe" :last_name "Matheatsie"))
+        member_2 (members/insert-member db (assoc empty_member :first_name "Pookie" :last_name "Matheatsie"))]
+
+    (println "member_1: " member_1)
+    (println "member_2: " member_2)
+
+
+    (relations/insert-relation db (assoc empty_member :first_name "Pookie" :last_name "Matheatsie"))))
 
 (defn init-app []
   (drop-tables) ;; TODO: remove, for dev only. Consider migrations for future

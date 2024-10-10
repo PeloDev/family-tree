@@ -66,6 +66,8 @@ VALUES
         :culture,
         :languages
     );
+SELECT
+    LAST_INSERT_ID();
 
 -- A :result value of :n below will return affected row count:
 -- :name insert-members :! :n
@@ -116,7 +118,7 @@ SET
 WHERE
     `id` = :id;
 
--- :name delete-members-by-id :! :n
+-- :name delete-member-by-id :! :n
 DELETE FROM
     `members`
 where
