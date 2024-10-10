@@ -1,8 +1,7 @@
 (ns family-tree-api.routes.app-routes
   (:require [compojure.core :as comp]
-            [family-tree-api.controllers.hello-world-controller :refer [greet-world]]))
+            [family-tree-api.routes.hello_world_routes :refer [hello-world-routes]]))
 
 (comp/defroutes app-routes
   (comp/context "/api" []
-    (comp/context "/helloWorld" []
-      (comp/GET "/" [] (greet-world)))))
+    hello-world-routes))
