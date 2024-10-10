@@ -1,7 +1,7 @@
-(ns clojure-app.handler-test
+(ns family-tree-api.handler-test
   (:require [clojure.test :refer :all]
             [ring.mock.request :as mock]
-            [clojure-app.handler :refer :all]))
+            [family-tree-api.handler :refer :all]))
 
 (deftest test-app
   (testing "main route"

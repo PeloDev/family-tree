@@ -1,6 +1,6 @@
-(ns clojure-app.routes.app-routes
+(ns family-tree-api.routes.app-routes
   (:require [compojure.core :as comp]
-            [clojure-app.controllers.hello-world-controller :refer [greet-world]]))
+            [family-tree-api.controllers.hello-world-controller :refer [greet-world]]))
 
 (comp/defroutes app-routes
   (comp/context "/api" []
