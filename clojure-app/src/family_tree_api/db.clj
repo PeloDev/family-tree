@@ -3,7 +3,7 @@
 
 ;; TODO: use env variables
 (def db
-  {:subprotocol "mysql"
-   :subname "//localhost:3307/family_tree"
-   :user "root"
+  {:subprotocol "postgres"
+   :subname "//localhost:5432/family_tree"
+   :user "postgres"
    :useSSL false})

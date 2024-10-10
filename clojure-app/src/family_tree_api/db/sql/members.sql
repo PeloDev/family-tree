@@ -1,51 +1,53 @@
 -- :name create-members-table :!
 -- :doc Create members table
-CREATE TABLE `members` (
-    `id` int NOT NULL AUTO_INCREMENT,
-    `first_name` varchar(45) NOT NULL,
-    `middle_names` varchar(45) DEFAULT NULL,
-    `last_name` varchar(45) NOT NULL,
-    `family_name` varchar(45) DEFAULT NULL,
-    `nickname` varchar(45) DEFAULT NULL,
-    `preferred_name` varchar(45) DEFAULT NULL,
-    `gender` varchar(45) DEFAULT NULL,
-    `date_of_birth` datetime DEFAULT NULL,
-    `address_of_birth` varchar(45) DEFAULT NULL,
-    `city_of_birth` varchar(45) DEFAULT NULL,
-    `province_of_birth` varchar(45) DEFAULT NULL,
-    `country_of_birth` varchar(45) DEFAULT NULL,
-    `image_url` varchar(45) DEFAULT NULL,
-    `ethnicity` varchar(45) DEFAULT NULL,
-    `culture` varchar(45) DEFAULT NULL,
-    `languages` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+CREATE TABLE members (
+    id bigserial,
+    first_name character varying(100) NOT NULL,
+    middle_names character varying(100),
+    last_name character varying(100) NOT NULL,
+    family_name character varying(100),
+    nickname character varying(45),
+    preferred_name character varying(100),
+    gender character varying(20),
+    date_of_birth time without time zone,
+    address_of_birth character varying(255),
+    city_of_birth character varying(100),
+    province_of_birth character varying(100),
+    country_of_birth character varying(100),
+    image_url character varying(255),
+    ethnicity character varying(45),
+    culture character varying(45),
+    languages character varying(255),
+    PRIMARY KEY (id)
+);
 
+-- ALTER TABLE
+--     IF EXISTS members OWNER to postgres;
 -- :name drop-members-table :!
 -- :doc Drop members table if exists
-DROP TABLE IF EXISTS `members`;
+DROP TABLE IF EXISTS members CASCADE;
 
 -- A :result value of :n below will return affected row count:
--- :name insert-member :! :n
+-- :name insert-member :? :1
 -- :doc Insert a single member
 INSERT INTO
-    `members` (
-        `first_name`,
-        `middle_names`,
-        `last_name`,
-        `family_name`,
-        `nickname`,
-        `preferred_name`,
-        `gender`,
-        `date_of_birth`,
-        `address_of_birth`,
-        `city_of_birth`,
-        `province_of_birth`,
-        `country_of_birth`,
-        `image_url`,
-        `ethnicity`,
-        `culture`,
-        `languages`
+    members (
+        first_name,
+        middle_names,
+        last_name,
+        family_name,
+        nickname,
+        preferred_name,
+        gender,
+        date_of_birth,
+        address_of_birth,
+        city_of_birth,
+        province_of_birth,
+        country_of_birth,
+        image_url,
+        ethnicity,
+        culture,
+        languages
     )
 VALUES
     (
@@ -65,64 +67,62 @@ VALUES
         :ethnicity,
         :culture,
         :languages
-    );
-SELECT
-    LAST_INSERT_ID();
+    ) RETURNING id;
 
 -- A :result value of :n below will return affected row count:
--- :name insert-members :! :n
+-- :name insert-members :? :*
 -- :doc Insert multiple members with :tuple* parameter type
 INSERT INTO
-    `members` (
-        `id`,
-        `first_name`,
-        `middle_names`,
-        `last_name`,
-        `family_name`,
-        `nickname`,
-        `preferred_name`,
-        `gender`,
-        `date_of_birth`,
-        `address_of_birth`,
-        `city_of_birth`,
-        `province_of_birth`,
-        `country_of_birth`,
-        `image_url`,
-        `ethnicity`,
-        `culture`,
-        `languages`
+    members (
+        id,
+        first_name,
+        middle_names,
+        last_name,
+        family_name,
+        nickname,
+        preferred_name,
+        gender,
+        date_of_birth,
+        address_of_birth,
+        city_of_birth,
+        province_of_birth,
+        country_of_birth,
+        image_url,
+        ethnicity,
+        culture,
+        languages
     )
 VALUES
-    :tuple * :members;
+    :tuple * :members RETURNING id;
 
 -- :name update-member :! :n
 UPDATE
-    `members`
+    members
 SET
-    `first_name` = :first_name,
-    `middle_names` = :middle_names,
-    `last_name` = :last_name,
-    `family_name` = :family_name,
-    `nickname` = :nickname,
-    `preferred_name` = :preferred_name,
-    `gender` = :gender,
-    `date_of_birth` = :date_of_birth,
-    `address_of_birth` = :address_of_birth,
-    `city_of_birth` = :city_of_birth,
-    `province_of_birth` = :province_of_birth,
-    `country_of_birth` = :country_of_birth,
-    `image_url` = :image_url,
-    `ethnicity` = :ethnicity,
-    `culture` = :culture,
-    `languages` = :languages
+    first_name = :first_name,
+    middle_names = :middle_names,
+    last_name = :last_name,
+    family_name = :family_name,
+    nickname = :nickname,
+    preferred_name = :preferred_name,
+    gender = :gender,
+    date_of_birth = :date_of_birth,
+    address_of_birth = :address_of_birth,
+    city_of_birth = :city_of_birth,
+    province_of_birth = :province_of_birth,
+    country_of_birth = :country_of_birth,
+    image_url = :image_url,
+    ethnicity = :ethnicity,
+    culture = :culture,
+    languages = :languages
 WHERE
-    `id` = :id;
+    id = :id;
 
 -- :name delete-member-by-id :! :n
 DELETE FROM
-    `members`
+    members
 where
-    `id` = :id;
+    id = :id;
 
 -- A ":result" value of ":1" specifies a single record
 -- (as a hashmap) will be returned
@@ -131,9 +131,9 @@ where
 SELECT
     *
 FROM
-    `members`
+    members
 WHERE
-    `id` = :id;
+    id = :id;
 
 -- A ":result" value of ":*" specifies a vector of records
 -- (as hashmaps) will be returned
@@ -142,8 +142,8 @@ WHERE
 SELECT
     *
 FROM
-    `members`
+    members
 WHERE
-    LOWER(`first_name`) LIKE LOWER('%:searchtext%'),
-    OR LOWER(`middle_names`) LIKE LOWER('%:searchtext%'),
-    OR LOWER(`last_name`) LIKE LOWER('%:searchtext%');
+    LOWER(first_name) LIKE LOWER('%' || :searchtext || '%'),
+    OR LOWER(middle_names) LIKE LOWER('%' || :searchtext || '%'),
+    OR LOWER(last_name) LIKE LOWER('%' || :searchtext || '%');

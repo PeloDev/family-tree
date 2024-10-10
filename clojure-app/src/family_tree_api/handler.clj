@@ -7,10 +7,12 @@
             [family-tree-api.db.relations :as relations]))
 
 (defn drop-tables []
+  (relations/drop-relations-table db)
   (members/drop-members-table db))
 
 (defn create-tables []
-  (members/create-members-table db))
+  (members/create-members-table db)
+  (relations/create-relations-table db))
 
 (defn insert-dummy-data []
   (let [empty_member {:first_name nil
@@ -34,14 +36,10 @@
                         :direct_relation nil
                         :is_blood_relation nil
                         :care nil}
-        member_1 (members/insert-member db (assoc empty_member :first_name "Boipelo" :middle_names "Molefe" :last_name "Matheatsie"))
-        member_2 (members/insert-member db (assoc empty_member :first_name "Pookie" :last_name "Matheatsie"))]
+        {mid1 :id} (members/insert-member db (assoc empty_member :first_name "Boipelo" :middle_names "Molefe" :last_name "Matheatsie"))
+        {mid2 :id} (members/insert-member db (assoc empty_member :first_name "Pookie" :last_name "Pookie"))]
 
-    (println "member_1: " member_1)
-    (println "member_2: " member_2)
-
-
-    (relations/insert-relation db (assoc empty_member :first_name "Pookie" :last_name "Matheatsie"))))
+    (relations/insert-relation db (assoc empty_relation :member_id mid1 :relation_id mid2 :direct_relation "parent" :is_blood_relation false :care "giver"))))
 
 (defn init-app []
   (drop-tables) ;; TODO: remove, for dev only. Consider migrations for future
