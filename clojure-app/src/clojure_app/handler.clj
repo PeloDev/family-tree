@@ -1,11 +1,7 @@
 (ns clojure-app.handler
-  (:require [compojure.core :refer :all]
-            [compojure.route :as route]
-            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
-
-(defroutes app-routes
-  (GET "/" [] "Hello World")
-  (route/not-found "Not Found"))
+  (:require [clojure-app.routes.app-routes :refer [app-routes]]
+            [compojure.core :refer :all]
+            [ring.middleware.defaults :refer [site-defaults wrap-defaults]]))
 
 (def app
   (wrap-defaults app-routes site-defaults))
