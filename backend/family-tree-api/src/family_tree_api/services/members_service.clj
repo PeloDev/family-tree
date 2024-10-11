@@ -2,7 +2,11 @@
   (:require [family-tree-api.db :refer [db]]
             [family-tree-api.db.members :as members]
             [family-tree-api.validators.members :refer [validate-member]]
-            [family-tree-api.helpers :refer [fill-member-keys]]))
+            [family-tree-api.utils.general :refer [fill-missing-fields-strict]]
+            [family-tree-api.models.members :refer [template-member]]))
+
+(defn fill-member-keys [partial-member]
+  (fill-missing-fields-strict partial-member template-member))
 
 (defn insert-member [member]
   (let [validation-errors (validate-member member)]

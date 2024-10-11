@@ -2,7 +2,7 @@
   (:use [ring.util.response :only [response content-type status]])
   (:require [family-tree-api.services.members-service :as members-service]
             [cheshire.core :as json]
-            [family-tree-api.helpers :as helpers]))
+            [family-tree-api.controllers.utils :refer [get-exception-type]]))
 
 (defn create-member [member]
   ;;   TODO
@@ -23,7 +23,7 @@
                      e))
           (content-type "application/json")
           (status
-           (if (= "validation-error" (helpers/get-exception-type e))
+           (if (= "validation-error" (get-exception-type e))
              400
              500))))))
 
@@ -37,14 +37,4 @@
 
 (defn remove-member [id]
   ;;   TODO
-  )
-
-
-(comment
-  (Integer/pa "no")
-  ;; Rebel Ridge 🥈
-  ;; Crazy Rich Asians ❌
-  ;; The Princess Diaries ❌
-  ;; The Devil Wears Prada 🥇
-  ;; Highschool Musical ❌
   )

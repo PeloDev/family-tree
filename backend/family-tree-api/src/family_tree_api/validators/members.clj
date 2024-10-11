@@ -2,10 +2,10 @@
   (:require
    [family-tree-api.models.members :as members-specs]
    [family-tree-api.validators.utils :refer [validate-data]]
-   [family-tree-api.helpers :as helpers]))
+   [family-tree-api.utils.general :as general-utils]))
 
 (defn validate-member [member]
-  (let [clean-member (helpers/strip-nil-vals-from-hashmap member)
+  (let [clean-member (general-utils/strip-nil-vals-from-hashmap member)
         shape-error (validate-data ::members-specs/member clean-member)]
     (if (not= nil shape-error)
       shape-error

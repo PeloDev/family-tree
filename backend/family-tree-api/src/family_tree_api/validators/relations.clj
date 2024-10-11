@@ -2,10 +2,10 @@
   (:require
    [family-tree-api.models.relations :as relations-specs]
    [family-tree-api.validators.utils :refer [validate-data]]
-   [family-tree-api.helpers :as helpers]))
+   [family-tree-api.utils.general :as general-utils]))
 
 (defn validate-relation [relation]
-  (let [clean-relation (helpers/strip-nil-vals-from-hashmap relation)
+  (let [clean-relation (general-utils/strip-nil-vals-from-hashmap relation)
         shape-error (validate-data ::relations-specs/relation clean-relation)]
     (if (not= nil shape-error)
       shape-error
