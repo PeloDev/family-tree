@@ -1,8 +1,8 @@
 (ns family-tree-api.validators.relations
   (:require
-            [family-tree-api.models.relations :as relations-specs]
-            [family-tree-api.validators.utils :refer [validate-data]]
-            [family-tree-api.helpers :as helpers]))
+   [family-tree-api.models.relations :as relations-specs]
+   [family-tree-api.validators.utils :refer [validate-data]]
+   [family-tree-api.helpers :as helpers]))
 
 (defn validate-relation [relation]
   (let [clean-relation (helpers/strip-nil-vals-from-hashmap relation)
@@ -11,7 +11,7 @@
       shape-error
       (let [field-errors (filter
                           #(not= nil %)
-                          (map
+                          (mapv
                            (fn [relation-key]
                              (validate-data (relation-key relations-specs/field-specs) (relation-key clean-relation) (name relation-key)))
                            (keys clean-relation)))]

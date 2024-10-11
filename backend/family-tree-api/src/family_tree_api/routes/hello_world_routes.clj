@@ -1,4 +1,4 @@
-(ns family-tree-api.routes.hello_world_routes
+(ns family-tree-api.routes.hello-world-routes
   (:require [compojure.core :as comp]
             [family-tree-api.controllers.hello-world-controller :refer [greet-world]]))
 

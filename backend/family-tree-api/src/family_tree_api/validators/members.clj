@@ -11,7 +11,7 @@
       shape-error
       (let [field-errors (filter
                           #(not= nil %)
-                          (map
+                          (mapv
                            (fn [member-key]
                              (validate-data (member-key members-specs/field-specs) (member-key clean-member) (name member-key)))
                            (keys clean-member)))]
