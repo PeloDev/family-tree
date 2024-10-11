@@ -4,7 +4,8 @@
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
             [family-tree-api.db :refer [db]]
             [family-tree-api.db.members :as members]
-            [family-tree-api.db.relations :as relations]))
+            [family-tree-api.db.relations :as relations]
+            [family-tree-api.helpers :as helpers]))
 
 (defn drop-tables []
   (relations/drop-relations-table db)
@@ -15,31 +16,12 @@
   (relations/create-relations-table db))
 
 (defn insert-dummy-data []
-  (let [empty_member {:first_name nil
-                      :middle_names nil
-                      :last_name nil
-                      :family_name nil
-                      :nickname nil
-                      :preferred_name nil
-                      :gender nil
-                      :date_of_birth nil
-                      :address_of_birth nil
-                      :city_of_birth nil
-                      :province_of_birth nil
-                      :country_of_birth nil
-                      :image_url nil
-                      :ethnicity nil
-                      :culture nil
-                      :languages nil}
-        empty_relation {:member_id nil
-                        :relation_id nil
-                        :direct_relation nil
-                        :is_blood_relation nil
-                        :care nil}
-        {mid1 :id} (members/insert-member db (assoc empty_member :first_name "Boipelo" :middle_names "Molefe" :last_name "Matheatsie"))
-        {mid2 :id} (members/insert-member db (assoc empty_member :first_name "Pookie" :last_name "Pookie"))]
+  (let [{mid1 :id} (members/insert-member db (helpers/fill-member-keys {:first_name "Boipelo" :middle_names "Molefe" :last_name "Matheatsie" :gender "male"}))
+        {mid2 :id} (members/insert-member db (helpers/fill-member-keys {:first_name "Pookie" :last_name "Pookie"}))
+        {mid3 :id} (members/insert-member db (helpers/fill-member-keys {:first_name "Nerdy" :middle_names "Sweet" :last_name "Angel" :gender "female"}))]
 
-    (relations/insert-relation db (assoc empty_relation :member_id mid1 :relation_id mid2 :direct_relation "parent" :is_blood_relation false :care "giver"))))
+    (relations/insert-relation db (helpers/fill-relation-keys {:member_id mid1 :relation_id mid2 :direct_relation "parent" :is_blood_relation false :care "giver"}))
+    (relations/insert-relation db (helpers/fill-relation-keys {:member_id mid3 :relation_id mid2 :direct_relation "parent" :is_blood_relation false :care "giver"}))))
 
 (defn init-app []
   (drop-tables) ;; TODO: remove, for dev only. Consider migrations for future
