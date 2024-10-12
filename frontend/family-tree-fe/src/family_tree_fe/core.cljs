@@ -2,22 +2,36 @@
   (:require
    [reagent.core :as r]
    [reagent.dom :as d]
-   [family-tree-fe.components.member :refer [member-node]]))
+   [family-tree-fe.components.member :refer [member-node]]
+   [family-tree-fe.api.api :refer [get-member-by-id]]))
 
 ;; -------------------------
 ;; Views
 
-(defn member-nodes []
-  [:div (map (fn [idx]
-               ^{:key idx} [member-node idx])
-             [{:first_name "Boipelo" :last_name "Matheatsie" :image_url "https://boipelo.dev/_app/immutable/assets/optimal-me.ee2f9c8d.webp"}
-              {:first_name "Pookie" :last_name "Pookie" :image_url "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/025.png"}
-              {:first_name "Nerdy" :last_name "Angel" :image_url "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfeNL87YxBJeBtXMDFah7DRMoFTS0Uv1yalw&s"}])])
+(defn member-nodes [members]
+  [:div (map (fn [member]
+               ^{:key (:id member)} [member-node member])
+             members)])
+
+(defn member-exists? [members id]
+  (not= nil (some #(= (:id %) id) members)))
+
+(defn add-member-if-not-exists [members member]
+  (if (member-exists? @members (:id member))
+    @members
+    (swap! members conj member)))
+
+(def members (r/atom []))
 
 (defn home-page []
-  [:div
+  (get-member-by-id 1 (fn [member]
+                        (add-member-if-not-exists members member)))
+  [:div {:style
+         {:min-width "100vw" :min-height "100vh"}}
    [:h2 "Welcome to Reagent"]
-   [member-nodes]])
+   [:div {:style
+          {:position "absolute" :top "50%" :left "50%"}}
+    [member-nodes @members]]])
 
 ;; -------------------------
 ;; Initialize app
