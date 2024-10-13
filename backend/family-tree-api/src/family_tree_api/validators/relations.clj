@@ -21,7 +21,8 @@
 (comment
   (def bmrelation {:member_id 1
                    :relation_id 2
-                   :direct_relation "cuz"
+                   :member_to_relation "cuz"
+                   :relation_to_member "cuz"
                    :is_blood_relation false
                    :care "giver"})
   (validate-relation bmrelation))

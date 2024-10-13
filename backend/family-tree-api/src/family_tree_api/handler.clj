@@ -4,15 +4,17 @@
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [ring.middleware.cors :refer [wrap-cors]]
-            [family-tree-api.db :refer [db]]
+            [family-tree-api.db.db :refer [db]]
             [family-tree-api.db.members :as members]
             [family-tree-api.db.relations :as relations]
             [family-tree-api.services.members-service :as members-service]
-            [family-tree-api.services.relations-service :as relations-service]))
+            [family-tree-api.services.relations-service :as relations-service]
+            [family-tree-api.db.migrations :as migrations]))
 
 (defn drop-tables []
   (relations/drop-relations-table db)
-  (members/drop-members-table db))
+  (members/drop-members-table db)
+  (migrations/drop-migrations-table db))
 
 (defn create-tables []
   (members/create-members-table db)
@@ -23,14 +25,15 @@
         {mid2 :id} (members/insert-member db (members-service/fill-member-keys {:first_name "Pookie" :last_name "Pookie" :image_url "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/025.png"}))
         {mid3 :id} (members/insert-member db (members-service/fill-member-keys {:first_name "Nerdy" :middle_names "Sweet" :last_name "Angel" :gender "female" :image_url "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfeNL87YxBJeBtXMDFah7DRMoFTS0Uv1yalw&s"}))]
 
-    (relations/insert-relation db (relations-service/fill-relation-keys {:member_id mid1 :relation_id mid2 :direct_relation "parent" :is_blood_relation false :care "giver"}))
-    (relations/insert-relation db (relations-service/fill-relation-keys {:member_id mid3 :relation_id mid2 :direct_relation "parent" :is_blood_relation false :care "giver"}))
-    (relations/insert-relation db (relations-service/fill-relation-keys {:member_id mid1 :relation_id mid3 :direct_relation "spouse" :is_blood_relation false}))))
+    (relations/insert-relation db (relations-service/fill-relation-keys {:member_id mid1 :relation_id mid2 :member_to_relation "parent" :relation_to_member "child" :is_blood_relation false :care "giver"}))
+    (relations/insert-relation db (relations-service/fill-relation-keys {:member_id mid3 :relation_id mid2 :member_to_relation "parent" :relation_to_member "child" :is_blood_relation false :care "giver"}))
+    (relations/insert-relation db (relations-service/fill-relation-keys {:member_id mid1 :relation_id mid3 :member_to_relation "spouse" :relation_to_member "spouse" :is_blood_relation false}))))
 
 
 (defn init-app []
   (drop-tables) ;; TODO: remove, for dev only. Consider migrations for future
   (create-tables)
+  (migrations/run-migrations)
   (insert-dummy-data) ;; TODO: remove, for dev only
 
   (-> app-routes

@@ -1,5 +1,5 @@
 (ns family-tree-api.services.relations-service
-  (:require [family-tree-api.db :refer [db]]
+  (:require [family-tree-api.db.db :refer [db]]
             [family-tree-api.db.relations :as relations]
             [family-tree-api.validators.relations :refer [validate-relation]]
             [family-tree-api.utils.general :refer [fill-missing-fields-strict]]

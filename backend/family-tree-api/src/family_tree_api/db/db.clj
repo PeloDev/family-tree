@@ -1,4 +1,4 @@
-(ns family-tree-api.db
+(ns family-tree-api.db.db
   (:require [hugsql.core :as hugsql]))
 
 ;; TODO: use env variables

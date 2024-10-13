@@ -15,7 +15,8 @@ CREATE TYPE care_type AS ENUM ('giver', 'receiver');
 CREATE TABLE relations (
     member_id bigint NOT NULL,
     relation_id bigint NOT NULL,
-    direct_relation direct_relation_type NOT NULL,
+    member_to_relation direct_relation_type NOT NULL,
+    relation_to_member direct_relation_type NOT NULL,
     is_blood_relation boolean NOT NULL,
     care care_type,
     PRIMARY KEY (member_id, relation_id),
@@ -38,7 +39,8 @@ INSERT INTO
     relations (
         member_id,
         relation_id,
-        direct_relation,
+        member_to_relation,
+        relation_to_member,
         is_blood_relation,
         care
     )
@@ -46,7 +48,8 @@ VALUES
     (
         :member_id,
         :relation_id,
-        :direct_relation :: direct_relation_type,
+        :member_to_relation :: direct_relation_type,
+        :relation_to_member :: direct_relation_type,
         :is_blood_relation,
         :care :: care_type
     ) RETURNING member_id,
@@ -56,7 +59,8 @@ VALUES
 UPDATE
     relations
 SET
-    direct_relation = :direct_relation,
+    member_to_relation = :member_to_relation,
+    relation_to_member = :relation_to_member,
     is_blood_relation = :is_blood_relation,
     care = :care
 WHERE
@@ -81,3 +85,13 @@ FROM
 WHERE
     member_id = :member_id
     AND relation_id = :relation_id;
+
+-- :name relations-of-member :? :*
+-- :doc Get all direct relations of a member
+SELECT
+    *
+FROM
+    relations
+WHERE
+    member_id = :member_id
+    OR relation_id = :member_id;
