@@ -85,13 +85,4 @@ FROM
 WHERE
     member_id = :member_id
     AND relation_id = :relation_id;
-
--- :name relations-of-member :? :*
--- :doc Get all direct relations of a member
-SELECT
-    *
-FROM
-    relations
-WHERE
-    member_id = :member_id
-    OR relation_id = :member_id;
+    

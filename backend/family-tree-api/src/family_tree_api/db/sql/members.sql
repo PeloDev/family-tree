@@ -147,3 +147,20 @@ WHERE
     LOWER(first_name) LIKE LOWER('%' || :searchtext || '%'),
     OR LOWER(middle_names) LIKE LOWER('%' || :searchtext || '%'),
     OR LOWER(last_name) LIKE LOWER('%' || :searchtext || '%');
+
+-- :name related-members :? :*
+-- :doc Get all direct relations of a member
+SELECT
+    DISTINCT ON (m.id) m.*,
+    r.member_to_relation,
+    r.relation_to_member,
+    r.relation_id AS "relation_to_id"
+FROM
+    members m
+    JOIN relations r ON (
+        r.member_id = m.id
+        OR r.relation_id = m.id
+    )
+WHERE
+    :id IN (r.member_id, r.relation_id)
+    AND m.id != :id;

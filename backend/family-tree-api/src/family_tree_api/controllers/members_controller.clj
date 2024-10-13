@@ -17,6 +17,13 @@
       (json-response {:data (ex-data e)
                       :status-code (if (is-exception-bad-request? e) 400 500)}))))
 
+(defn get-member-direct-relations [id]
+  (try
+    (json-response {:data (members-service/get-member-direct-relations id) :status-code 200})
+    (catch Exception e
+      (json-response {:data (ex-data e)
+                      :status-code (if (is-exception-bad-request? e) 400 500)}))))
+
 (defn search-member-by-name [name]
 ;;   TODO
   )
