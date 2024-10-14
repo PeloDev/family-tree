@@ -43,25 +43,27 @@
       (throw
        (ex-info "get-member-by-id db error" {:type "database-error" :errors [e]})))))
 
-(defn get-member-direct-relations [id]
+(defn get-member-parents [id]
   (when (not (int? id))
     (throw
-     (ex-info "get-member-direct-relations service error" {:type "validation-error" :errors
-                                                           ["Invalid type provided for id"]})))
+     (ex-info "get-member-parents service error" {:type "validation-error" :errors
+                                                  ["Invalid type provided for id"]})))
   (try
-    (map
-     (fn [related-member]
-       (let [member_to_relation (if (= (:relation_to_id related-member) id)
-                                  (:relation_to_member related-member)
-                                  (:member_to_relation related-member))]
-         (assoc
-          (dissoc
-           related-member :relation_to_id :member_to_relation :relation_to_member)
-          :member_to_relation member_to_relation)))
-     (members/related-members db {:id id}))
+    (members/member-parents db {:id id})
     (catch Exception e
       (throw
-       (ex-info "get-member-direct-relations db error" {:type "database-error" :errors [e]})))))
+       (ex-info "get-member-parents db error" {:type "database-error" :errors [e]})))))
+
+(defn get-member-children [id]
+  (when (not (int? id))
+    (throw
+     (ex-info "get-member-children service error" {:type "validation-error" :errors
+                                                   ["Invalid type provided for id"]})))
+  (try
+    (members/member-children db {:id id})
+    (catch Exception e
+      (throw
+       (ex-info "get-member-children db error" {:type "database-error" :errors [e]})))))
 
 (defn delete-member [id]
   (when (not (int? id))

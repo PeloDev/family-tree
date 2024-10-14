@@ -17,9 +17,16 @@
       (json-response {:data (ex-data e)
                       :status-code (if (is-exception-bad-request? e) 400 500)}))))
 
-(defn get-member-direct-relations [id]
+(defn get-member-parents [id]
   (try
-    (json-response {:data (members-service/get-member-direct-relations id) :status-code 200})
+    (json-response {:data (members-service/get-member-parents id) :status-code 200})
+    (catch Exception e
+      (json-response {:data (ex-data e)
+                      :status-code (if (is-exception-bad-request? e) 400 500)}))))
+
+(defn get-member-children [id]
+  (try
+    (json-response {:data (members-service/get-member-children id) :status-code 200})
     (catch Exception e
       (json-response {:data (ex-data e)
                       :status-code (if (is-exception-bad-request? e) 400 500)}))))

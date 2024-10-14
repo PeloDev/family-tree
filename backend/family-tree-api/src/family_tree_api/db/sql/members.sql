@@ -148,45 +148,25 @@ WHERE
     OR LOWER(middle_names) LIKE LOWER('%' || :searchtext || '%'),
     OR LOWER(last_name) LIKE LOWER('%' || :searchtext || '%');
 
--- :name related-members :? :*
--- :doc Get all direct relations of a member
+-- :name member-parents :? :*
+-- :doc Get all parents of a member
 SELECT
-    DISTINCT ON (m.id) m.*,
-    r.member_to_relation,
-    r.relation_to_member,
-    r.relation_id AS "relation_to_id"
+    m.*
 FROM
     members m
-    JOIN relations r ON (
-        r.member_id = m.id
-        OR r.relation_id = m.id
-    )
+    JOIN parents p ON (p.id = m.id)
 WHERE
-    :id IN (r.member_id, r.relation_id)
-    AND m.id != :id;
+    p.child_id = :id;
 
 -- :name member-children :? :*
 -- :doc Get all children of a member
 SELECT
-    DISTINCT ON (m.id) m.*
+    m.*
 FROM
     members m
-    JOIN relations r ON (
-        r.member_id = m.id
-        OR r.relation_id = m.id
-    )
+    JOIN parents p ON (p.child_id = m.id)
 WHERE
-    m.id != :id
-    AND (
-        (
-            r.member_id = :id
-            AND r.member_to_relation = 'parent'
-        )
-        OR (
-            r.relation_id = :id
-            AND r.relation_to_member = 'child'
-        )
-    );
+    p.id = :id;
 
 -- :name member-spouses :? :*
 -- :doc Get all spouses of a member
@@ -194,15 +174,12 @@ SELECT
     DISTINCT ON (m.id) m.*
 FROM
     members m
-    JOIN relations r ON (
-        r.member_id = m.id
-        OR r.relation_id = m.id
+    JOIN spouses s ON (
+        s.id = m.id
+        OR s.spouse_id = m.id
     )
 WHERE
-    m.id != :id
-    AND 1 IN (r.member_id, r.relation_id)
-    AND r.member_to_relation = 'spouse';
-
--- :name couple-children-ids :? :*
--- :doc Get all member ids who are children between a given couple
--- TODO:...
+    m.id != :id (
+        s.id = :id
+        OR s.spouse_id = :id
+    );
