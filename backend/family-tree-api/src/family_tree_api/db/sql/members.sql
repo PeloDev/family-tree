@@ -164,3 +164,45 @@ FROM
 WHERE
     :id IN (r.member_id, r.relation_id)
     AND m.id != :id;
+
+-- :name member-children :? :*
+-- :doc Get all children of a member
+SELECT
+    DISTINCT ON (m.id) m.*
+FROM
+    members m
+    JOIN relations r ON (
+        r.member_id = m.id
+        OR r.relation_id = m.id
+    )
+WHERE
+    m.id != :id
+    AND (
+        (
+            r.member_id = :id
+            AND r.member_to_relation = 'parent'
+        )
+        OR (
+            r.relation_id = :id
+            AND r.relation_to_member = 'child'
+        )
+    );
+
+-- :name member-spouses :? :*
+-- :doc Get all spouses of a member
+SELECT
+    DISTINCT ON (m.id) m.*
+FROM
+    members m
+    JOIN relations r ON (
+        r.member_id = m.id
+        OR r.relation_id = m.id
+    )
+WHERE
+    m.id != :id
+    AND 1 IN (r.member_id, r.relation_id)
+    AND r.member_to_relation = 'spouse';
+
+-- :name couple-children-ids :? :*
+-- :doc Get all member ids who are children between a given couple
+-- TODO:...
