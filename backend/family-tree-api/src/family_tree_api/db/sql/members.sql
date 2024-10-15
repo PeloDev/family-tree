@@ -179,7 +179,22 @@ FROM
         OR s.spouse_id = m.id
     )
 WHERE
-    m.id != :id (
+    m.id != :id
+    AND (
         s.id = :id
         OR s.spouse_id = :id
     );
+
+-- :name children-between-members :? :*
+-- :doc Get all children between 2 members
+SELECT
+    m.*
+FROM
+    members m
+JOIN
+    parents p1 ON p1.child_id = m.id
+JOIN
+    parents p2 ON p2.child_id = m.id
+WHERE
+    p1.id = :parent1_id
+    AND p2.id = :parent2_id;

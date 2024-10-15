@@ -65,6 +65,17 @@
       (throw
        (ex-info "get-member-children db error" {:type "database-error" :errors [e]})))))
 
+(defn get-children-between-2-members [member1_id member2_id]
+  (when (not (or (int? member1_id) (int? member2_id)))
+    (throw
+     (ex-info "get-children-between-2-members service error" {:type "validation-error" :errors
+                                                              ["Invalid type provided for id"]})))
+  (try
+    (members/children-between-members db {:parent1_id member1_id :parent2_id member2_id})
+    (catch Exception e
+      (throw
+       (ex-info "get-children-between-2-members db error" {:type "database-error" :errors [e]})))))
+
 (defn delete-member [id]
   (when (not (int? id))
     (throw
